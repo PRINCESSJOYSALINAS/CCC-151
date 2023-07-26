@@ -14,18 +14,8 @@ root.geometry("1350x700+0+0")
 root.config(bg="#F9CEE0")  
 
 # Title Label
-title_label = tk.Label(root, text="STUDENT INFORMATION SYSTEM", font=("Garamond", 35, "bold"), fg="maroon", bg="white smoke", border=10, relief=tk.GROOVE)
+title_label = tk.Label(root, text="STUDENT INFORMATION SYSTEM", font=("Georgia", 35, "bold"), fg="maroon", bg="#CE9DD9", border=10, relief=tk.GROOVE)
 title_label.pack(side=tk.TOP, fill=tk.X)
-
-# Blinking Title
-def toggle_color():
-    if title_label.cget("fg") == "#A95C68":
-        title_label.config(fg="#D8BFD8", font=("Tahoma", 35, "bold italic"))
-    else:
-        title_label.config(fg="#A95C68", font=("Tahoma", 35, "bold"))
-    root.after(1000, toggle_color)  # Toggle every 1000 milliseconds (0.10 seconds)
-
-toggle_color() # Start the blinking effect
 
 # Creating empty list to store students' data
 students = []
@@ -197,14 +187,30 @@ def search_students():
         if query.lower() in student['Name'].lower() or query.lower() in student['ID_Number'].lower():
             myoutput.insert("", tk.END, values=(student["Name"], student["ID_Number"], student['Year_Level'], student["Course"], student['Gender']))
     search_entry.delete(0, tk.END)
-    
+
+# Function to select a student from the list
+def select_student():
+    selected_item = myoutput.selection()
+    if selected_item:
+        student_info = myoutput.item(selected_item, 'values')
+        name_entry.delete(0, tk.END)
+        id_entry.delete(0, tk.END)
+        year_entry.set("")
+        course_entry.delete(0, tk.END)
+        gender_entry.set("")
+        name_entry.insert(0, student_info[0])
+        id_entry.insert(0, student_info[1])
+        year_entry.set(student_info[2])
+        course_entry.insert(0, student_info[3])
+        gender_entry.set(student_info[4])
+
  # Background Data Frame
 data_frame = tk.LabelFrame(root, bg="#E8C3A2", relief=tk.RIDGE, bd=5)
-data_frame.place(x=610, y=80, height=610, width=700)
+data_frame.place(x=790, y=80, height=700, width=700)
 
 # Output Frames
 output_area = tk.Frame(data_frame, bd=3)
-output_area.place(x=20, y=310, height=280, width=622)
+output_area.place(x=20, y=105, height=355, width=630)
 
 style = ttk.Style()
 style.theme_use("alt")
@@ -227,57 +233,60 @@ myoutput.column("Course", anchor="center", width=100)
 myoutput.column("Gender", anchor="center", width=100)
 
 y_scrollbar = tk.Scrollbar(data_frame, orient="vertical", command=myoutput.yview)
-y_scrollbar.place(x=640, y=310, height=280)
+y_scrollbar.place(x=653, y=105, height=355)
 myoutput.configure(yscrollcommand=y_scrollbar.set)
 
 # Labels
 
-name_label = tk.Label(data_frame, text="STUDENT PROFILE", font=("Times new roman", 18, "bold"), fg="maroon", bg="#E8C3A2")
-name_label.place(x=250, y=12)
+name_label = tk.Label(data_frame, text="LEARNER PROFILE", font=("Times new roman", 18, "bold"), fg="maroon", bg="#E8C3A2")
+name_label.place(x=250, y=10)
 name_label = tk.Label(data_frame, text="Name", font=("Century",14,"bold"), fg="black", bg="#E8C3A2")
-name_label.place(x=30, y=50)
+name_label.place(x=30, y=550)
 id_label = tk.Label(data_frame, text="ID Number", font=("Century",14,"bold"), fg="black", bg="#E8C3A2")
-id_label.place(x=380, y=50)
+id_label.place(x=390, y=565)
 year_label = tk.Label(data_frame, text="Year Level", font=("Century",14,"bold"), fg="black", bg="#E8C3A2")
-year_label.place(x=30, y=100)
+year_label.place(x=30, y=600)
 course_label = tk.Label(data_frame, text="Course Code", font=("Century",14,"bold"), fg="black", bg="#E8C3A2")
-course_label.place(x=380, y=100)
+course_label.place(x=390, y=615)
 gender_label = tk.Label(data_frame, text="Gender", font=("Century",14,"bold"), fg="black", bg="#E8C3A2")
-gender_label.place(x=30, y=150)
+gender_label.place(x=30, y=650)
 
 # Entry Fields
 name_entry = tk.Entry(data_frame, font=("Arial", 12),bg="white", bd=2)
-name_entry.place(x=100, y=50, width=250)
+name_entry.place(x=100, y= 550, width=250)
 id_entry = tk.Entry(data_frame, font=("Arial", 12),bg="white", bd=2)
-id_entry.place(x=500, y=50, width=150)
+id_entry.place(x=510, y=565, width=150)
 year_values = ["I", "II", "III", "IV"]
 year_entry = ttk.Combobox(data_frame, values=year_values, font=("Arial 12"), state="white")
-year_entry.place(x= 150, y=100 )
+year_entry.place(x= 150, y=600)
 course_entry = tk.Entry(data_frame, font=("Arial", 12),bg="white", bd=2)
-course_entry.place(x=510, y=100, width=140)
+course_entry.place(x=520, y=615, width=140)
 gender_values = ["Male", "Female"]
 gender_entry = ttk.Combobox(data_frame, values=gender_values, font=("Arial 12"), state="white")
-gender_entry.place(x=120, y=150, width=230)
+gender_entry.place(x=120, y=650, width=230)
 
 # Buttons
 add_button = tk.Button(data_frame, bg="#C9A9A6", text="Add", bd=5, font=("Arial",10,"bold"), width=16, command=add_student)
-add_button.place(x=70, y=210, width=120)
+add_button.place(x=50, y=490, width=100)
 delete_button = tk.Button(data_frame, bg="#C9A9A6", text="Delete", bd=5, font=("Arial",10,"bold"), width=16, command=delete_student)
-delete_button.place(x=210, y=210, width=120)
-edit_button = tk.Button(data_frame, bg="#C9A9A6", text="Edit", bd=5, font=("Arial",10,"bold"), width=16, command=edit_student)
-edit_button.place(x=350, y=210, width=120)
+delete_button.place(x=293, y=490, width=100)
+edit_button = tk.Button(data_frame, bg="#C9A9A6", text="Update", bd=5, font=("Arial",10,"bold"), width=16, command=edit_student)
+edit_button.place(x=173, y=490, width=100)
 list_button = tk.Button(data_frame, bg="#C9A9A6", text="List", bd=5, font=("Arial",10,"bold"), width=10, command=list_students)
-list_button.place(x=490, y=210, width=120)
+list_button.place(x=535, y=490, width=100)
 
 # Search Entry Field
-search_label = tk.Label(data_frame, text="Search by Name or ID Number:", font=("Arial",12, "bold"), fg="black", bg="#E8C3A2")
-search_label.place(x=30, y=270)
+search_label = tk.Label(data_frame, text=" ", font=("Arial",12, "bold"), fg="black", bg="#E8C3A2")
+search_label.place(x=25, y=65)
 search_entry = tk.Entry(data_frame, font=("Arial", 12), bd=3)
-search_entry.place(x=275, y=270, width=200)
+search_entry.place(x=430, y=70, width=150)
 
+# Select Button
+select_button = tk.Button(data_frame, bg="#C9A9A6", text="Select ", bd=5, font=("Arial",10,"bold"), width=12, command=select_student)
+select_button.place(x=413, y=490, width=100)
 # Search Button
 search_button = tk.Button(data_frame, bg="#C9A9A6", text="Search", bd=5, font=("Arial",10,"bold"), width=12, command=search_students)
-search_button.place(x=500, y=266, width=110)
+search_button.place(x=586, y=63, width=65)
 
 ### COURSES ###
 
@@ -330,13 +339,13 @@ def add_course():
     # Check if the course code already exists
     existing_course_code = [course['CourseCode'] for course in courses]
     if CourseCode in existing_course_code:
-        messagebox.showerror('Invalid Course Code', 'The entered course code already exists.')
+        messagebox.showerror('Invalid Course Code', 'The entered course name already exists.')
         return
     
     # Check if the course name already exists
     existing_course_name = [course['CourseName'] for course in courses]
     if CourseName in existing_course_name:
-        messagebox.showerror('Invalid Course Name', 'The entered course name already exists.')
+        messagebox.showerror('Invalid Course Name', 'The entered course code already exists.')
         return
     
     # Creating course dictionary
@@ -380,23 +389,32 @@ def search_courses():
             course_tree.insert("", tk.END, values=(course['CourseName'], course['CourseCode']))
     search_course_entry.delete(0, tk.END)
 
+def select_course():
+    selected_item = course_tree.selection()
+    if selected_item:
+        course_info = course_tree.item(selected_item, 'values')
+        courses_entry.delete(0, tk.END)
+        coursecode_entry.delete(0, tk.END)
+        courses_entry.insert(0, course_info[0])
+        coursecode_entry.insert(0, course_info[1])
+
 # course frame
 course_frame = tk.LabelFrame(root, bg="#BCC0C9", relief=tk.RIDGE, bd=5)
-course_frame.place(x=40, y=80, height=610, width=540)
+course_frame.place(x=45, y=85, height=700, width=700)
 
 # Course Treeview
 course_tree = ttk.Treeview(course_frame, columns=("Course Code", "Course Name"), show="headings")
-course_tree.place(x=20, y=260, width=480, height=330)
+course_tree.place(x=20, y=320, width=630, height=355)
 course_tree.heading("Course Code", text="Course Code")
 course_tree.heading("Course Name", text="Course Name")
 
 y_scrollbar_course = tk.Scrollbar(course_frame, orient="vertical", command=course_tree.yview)
-y_scrollbar_course.place(x=500, y=260, height=330)
+y_scrollbar_course.place(x=653, y=320, height=355)
 course_tree.configure(yscrollcommand=y_scrollbar_course.set)
 
 #Course Label
 courselabel = tk.Label(course_frame, text="COURSES", font=("Times new roman", 18, "bold"), fg="maroon", bg="#BCC0C9")
-courselabel.place(x=225, y=15)
+courselabel.place(x=280, y=15)
 coursescodelabel = tk.Label(course_frame, text="Course Code", font=("Century",14,"bold"), fg="black", bg="#BCC0C9")
 coursescodelabel.place(x=20, y=65)
 coursesnamelabel = tk.Label(course_frame, text="Course Name", font=("Century",14,"bold"), fg="black", bg="#BCC0C9")
@@ -404,35 +422,39 @@ coursesnamelabel.place(x=20, y=115)
 
 # Create an Entry widget for course input
 courses_entry = tk.Entry(course_frame, font=("Arial", 12),bg="white", bd=2)
-courses_entry.place(x=160, y=65, width=200)
+courses_entry.place(x=160, y=65, width=300)
 coursecode_entry = tk.Entry(course_frame, font=("Arial 12"),bg="white", bd=2)
 coursecode_entry.place(x=160, y=115, width=300)
 
 # Add Course Button
-add_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Add Course", bd=5, font=("Arial",10,"bold"), width=16, command=add_course)
-add_course_button.place(x=50, y=163, width=85)
+add_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Add ", bd=5, font=("Arial",10,"bold"), width=16, command=add_course)
+add_course_button.place(x=50, y=190, width=100)
 
 
 # Update Course Button
-update_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Edit Course", bd=5, font=("Arial",10,"bold"), width=16, command=update_course)
-update_course_button.place(x=155, y=163, width=85)
+update_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Update ", bd=5, font=("Arial",10,"bold"), width=16, command=update_course)
+update_course_button.place(x=173, y=190, width=100)
 # Delete Course Button
-delete_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Delete Course", bd=5, font=("Arial",10,"bold"), width=16, command=delete_course)
-delete_course_button.place(x=260, y=163, width=95)
+delete_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Delete ", bd=5, font=("Arial",10,"bold"), width=16, command=delete_course)
+delete_course_button.place(x=293, y=190, width=100)
 
 # Available Courses Button
-courses_button = tk.Button(course_frame, bg="#C9A9A6", text="Course List", bd=5, font=("Arial",10,"bold"), width=16, command=list_courses)
-courses_button.place(x=375, y=163, width=120)
+courses_button = tk.Button(course_frame, bg="#C9A9A6", text="List", bd=5, font=("Arial",10,"bold"), width=16, command=list_courses)
+courses_button.place(x= 535, y=190, width=100)
 
 # Search Entry Field for courses
-search_course_label = tk.Label(course_frame, text="Search by Course Name or Code:", font=("Century",12,"bold"), fg="black", bg="#BCC0C9")
+search_course_label = tk.Label(course_frame, text="", font=("Century",12,"bold"), fg="black", bg="#BCC0C9")
 search_course_label.place(x=20, y=220)
 search_course_entry = tk.Entry(course_frame, font=("Arial", 12), bd=3)
-search_course_entry.place(x=225, y=220, width=160)
+search_course_entry.place(x=100, y=283, width=160)
 
 # Search Button for courses
-search_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Search Courses", bd=5, font=("Arial", 10, "bold"), width=15, command=search_courses)
-search_course_button.place(x=390, y=216, width=110)
+search_course_button = tk.Button(course_frame, bg="#C9A9A6", text="Search", bd=5, font=("Arial", 10, "bold"), width=15, command=search_courses)
+search_course_button.place(x=25, y=280, width=70)
+
+# Select Button
+select_button = tk.Button(course_frame, bg="#C9A9A6", text="Select ", bd=5, font=("Arial",10,"bold"), width=16, command=select_course)
+select_button.place(x=413, y=190, width=100)
 
 
 # Starting the main loop
